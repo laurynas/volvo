@@ -15,4 +15,4 @@ While digging for information I found the most useful info here:
 
 - Reinis Veps [CarPC project](http://wot.lv/category/rpi-carpc.html)
 - Niclas Lardh [discussion](http://www.svxc.se/phpBB2/viewtopic.php?t=22034)
-
+- maniacus [CarPC project](https://www.drive2.ru/l/6048661/)

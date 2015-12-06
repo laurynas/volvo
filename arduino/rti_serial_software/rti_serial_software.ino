@@ -15,7 +15,7 @@ char current_brightness_level = 15;
 const int rti_delay = 100;
 
 // set up a new serial object
-SoftwareSerial rtiSerial(rxPin, txPin, true);
+SoftwareSerial rtiSerial(rxPin, txPin);
 
 void setup() {
   rtiSerial.begin(2400);

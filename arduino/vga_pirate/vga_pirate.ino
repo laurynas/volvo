@@ -79,9 +79,9 @@ void loop() {
 enum display_mode_name {RTI_RGB, RTI_PAL, RTI_NTSC, RTI_OFF};
 const char display_modes[] = {0x40, 0x45, 0x4C, 0x46};
 const char brightness_levels[] = {0x20, 0x61, 0x62, 0x23, 0x64, 0x25, 0x26, 0x67, 0x68, 0x29, 0x2A, 0x2C, 0x6B, 0x6D, 0x6E, 0x2F};
-const int rti_delay = 100;
 int current_display_mode = RTI_RGB;
 char current_brightness_level = 15;
+const int rti_delay = 100;
 
 void rti_loop() {
   rti_write(display_modes[current_display_mode]);

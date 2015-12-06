@@ -3,7 +3,6 @@
 const uint8_t RTI_SERIAL_TX = 4;
 enum display_mode_name {RTI_RGB, RTI_PAL, RTI_NTSC, RTI_OFF};
 const char display_modes[] = {0x40, 0x45, 0x4C, 0x46};
-
 const char brightness_levels[] = {0x20, 0x61, 0x62, 0x23, 0x64, 0x25, 0x26, 0x67, 0x68, 0x29, 0x2A, 0x2C, 0x6B, 0x6D, 0x6E, 0x2F};
 
 extern int current_display_mode;
@@ -68,21 +67,19 @@ void rti_enable_screen() {
   current_display_mode = RTI_PAL;
 }
 
-//inverted logic serial bitbang transmit
 void rti_bitbang_tx(char byte_to_tx) {
-
-  digitalWrite(RTI_SERIAL_TX, HIGH);
+  digitalWrite(RTI_SERIAL_TX, LOW);
   rti_tx_bit_delay();
 
   for (byte mask = 0x01; mask; mask <<= 1)
     {
       if (byte_to_tx & mask) // choose bit
-        digitalWrite(RTI_SERIAL_TX, LOW); // send 1
+        digitalWrite(RTI_SERIAL_TX, HIGH); // send 1
       else
-        digitalWrite(RTI_SERIAL_TX, HIGH); // send 0
+        digitalWrite(RTI_SERIAL_TX, LOW); // send 0
     
       rti_tx_bit_delay();
     }
-    digitalWrite(RTI_SERIAL_TX, LOW); // restore pin to natural state
+    digitalWrite(RTI_SERIAL_TX, HIGH); // restore pin to natural state
     rti_tx_bit_delay();
 }

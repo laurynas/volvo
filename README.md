@@ -1,5 +1,8 @@
 ## Controlling Volvo V50 '07 RTI screen with Arduino
 
+
+[<img width='50%' src='docs/pirate.jpg'/>](docs/pirate.jpg)
+
 ## Power connection
 
 [<img src='docs/power_connection.png'/>](docs/power_connection.png)
@@ -26,7 +29,7 @@ Display uses VGA Composite Sync signal, so HSYNC & VSYNC signals must be combine
 
 Arduino UNO [VGA example](arduino/vga_pirate/vga_pirate.ino).
 
-[<img width='50%' src='docs/pirate.jpg'/>](docs/pirate.jpg)
+[<img src='docs/arduino_rti.png'/>](docs/screen_connection.png)
 
 ## Thanks!
 

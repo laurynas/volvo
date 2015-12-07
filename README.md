@@ -31,7 +31,7 @@ Arduino UNO [VGA example](arduino/vga_pirate/vga_pirate.ino).
 
 [<img src='docs/arduino_rti.png'/>](docs/screen_connection.png)
 
-## Thanks!
+## Credits
 
 While digging for information I found the most useful info here:
 

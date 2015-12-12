@@ -41,6 +41,40 @@ ISR(TIMER2_OVF_vect) {
   you can do anything you want. Your code will be interrupted when VGA signal
   needs to be generated
   */
+  //generate audio modulation. around 15 clocks
+  asm volatile(                                   //4c to load Z and Y
+    "      ld r16, Z                        \n\t" //c1 r16=afreq
+    "      cpi %[freq0], 0                  \n\t" //c1 afreq0==0 ?
+    "      breq no_audio                    \n\t" //c1/2 *0
+    "play_audio:                            \n\t" 
+    "      cpi r16, 0                       \n\t" //c1 afreq==0 ?
+    "      brne dont_flip_audio_pin         \n\t" //c1/2 *1
+    "flip_audio_pin:                        \n\t" 
+    "      ldi r18, 1                       \n\t" //c1
+    "      out %[audiopin], r18             \n\t" //c1
+    "      st Z, %[freq0]                   \n\t" //c1 afreq=afreq0
+    "      rjmp end                         \n\t" //c2
+    //"    mov r16, %[freq0]\n\r"
+    //"    dec r16\n\r"
+    "no_audio:                              \n\t" 
+    "      nop                              \n\t" //c1
+    "      nop                              \n\t" //c1
+    "      nop                              \n\t" //c1
+    //"    nop                              \n\t" //c1
+    "      nop                              \n\t" //c1
+    "      nop                              \n\t" //c1
+    "      nop                              \n\t" //c1
+    "      rjmp end                         \n\t" //c2
+    "dont_flip_audio_pin:                   \n\t" 
+    "      dec r16                          \n\t" //c1
+    "      st Z, r16                        \n\t" //c1
+    //"    nop                              \n\t" //c1
+    "end:                                   \n\t"
+  :
+  : "z" (&afreq),
+    [freq0] "r" (afreq0),
+    [audiopin] "i" _SFR_IO_ADDR(PINC)
+  : "r16", "r18");
 
   //check vertical porch
   if (vskip) {
@@ -98,7 +132,7 @@ ISR(TIMER2_OVF_vect) {
     unrolled loop of 30 iterations.
     */
     asm volatile (
-      ".rept 144            \n\t" // right offset (invisible area)
+      ".rept 126            \n\t" // right offset (invisible area)
       "     nop             \n\t" //
       ".endr                \n\t" //
       "    ldi r20, 4       \n\t" //const for <<2bit
@@ -143,6 +177,10 @@ ISR(TIMER2_OVF_vect) {
 void VGAX::begin(bool enableTone) {
   //Timers setup code, modified version of the Nick Gammon's VGA sketch
   cli();
+  //setup audio pin
+  if (enableTone) {
+    pinMode(A0, OUTPUT);
+  }
   //disable TIMER0 interrupt
   TIMSK0=0;
   TCCR0A=0;
@@ -210,6 +248,15 @@ void VGAX::fillrect(byte x, byte y, byte width, byte height, byte color) {
     }
     y++;
   }
+}
+void VGAX::tone(unsigned int frequency) {
+  //HSYNC=32usec
+  // afreq=1000000 / frequency / 2 / 32;
+  afreq=1000000 / frequency / 2 / 64;
+  afreq0=afreq;
+}
+void VGAX::noTone() {
+  afreq0=0;
 }
 void VGAX::delay(int msec) {
   while (msec--) {

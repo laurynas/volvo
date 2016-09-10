@@ -1,0 +1,66 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require 'serialport'
+
+class Sniffer
+  def initialize
+    @noise = []
+    @recording_noise = false
+
+    port_str = "/dev/cu.usbmodem1421"  #may be different for you
+    baud_rate = 115200
+    data_bits = 8
+    stop_bits = 1
+    parity = SerialPort::NONE
+
+    @sp = SerialPort.new(port_str, baud_rate, data_bits, stop_bits, parity)    
+  end
+
+  def shutdown(reason)
+    return if reason==:int
+    
+    printf("\nshutting down serial (%s)\n", reason)
+    @sp.close
+    printf("done\n")
+  end
+
+  def read
+    i = @sp.gets.chomp
+    data = i.split("\t")
+    id = data.shift
+    [id, data] 
+  end  
+
+  def sniff
+    bundle = read 
+
+    return if @noise.include?(bundle)
+
+    if @recording_noise
+      @noise << bundle  
+    else
+      pp bundle
+    end
+  end
+
+  def toggle
+    @recording_noise = !@recording_noise
+
+    if @recording_noise
+      p "Recording noise..."
+    else
+      p "Finished noise recording."  
+    end  
+  end
+end
+
+sniffer = Sniffer.new
+
+at_exit     { sniffer.shutdown :exit }
+trap("INT") { sniffer.shutdown :int  ; exit }
+trap("INFO") { sniffer.toggle }
+ 
+loop do
+  sniffer.sniff
+end

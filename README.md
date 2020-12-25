@@ -1,5 +1,7 @@
 ## Controlling Volvo V50 '07 RTI screen with Arduino
 
+Part of [retrofitting of Android Auto to Volvo RTI project](https://github.com/laurynas/volvo_crankshaft).
+
 
 [<img width='50%' src='docs/pirate.jpg'/>](docs/pirate.jpg)
 

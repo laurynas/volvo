@@ -31,6 +31,8 @@ Display uses VGA Composite Sync signal, so HSYNC & VSYNC signals must be combine
 
 Arduino UNO [VGA example](arduino/vga_pirate/vga_pirate.ino).
 
+Resistor values same or similar as in [VGAX project](https://github.com/smaffer/vgax).
+
 [<img src='docs/arduino_rti.png'/>](docs/screen_connection.png)
 
 ## Credits
